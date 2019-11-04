@@ -1,0 +1,61 @@
+0) create netstandard2.0 library (EntryNamespace,EntryClass, EntryPoint)
+1) project build: dotnet build
+2) go in build dir: cd ./bin/Debug/netstandard2.0
+3) copy xamarin.forms libs and newtonsoft.json
+    cp ~/.nuget/packages/xamarin.forms/4.3.0.947036/lib/netstandard2.0/*.dll ./
+    cp ~/.nuget/packages/xamarin.forms/4.3.0.947036/lib/netstandard2.0/*.pdb ./
+    cp ~/.nuget/packages/newtonsoft.json/10.0.3/lib/netstandard1.3/*.dll ./ 
+4) publish: mono ~/Projects/wasm/mono-wasm/packager.exe --copy=always --out=./publish entryassembly.dll -debug
+5) finally copy remaining assets:    
+    mkdir ./publish/css
+    mkdir ./publish/js
+    cp -rvf ../../../../assets/*.* ./publish
+    cp -rvf ../../../../assets/css/*.* ./publish/css
+    cp -rvf ../../../../assets/js/*.* ./publish/js
+
+-- full build debug --
+cd $1
+dotnet clean
+dotnet restore
+dotnet build
+cp -v ~/.nuget/packages/xamarin.forms/4.3.0.947036/lib/netstandard2.0/*.dll ./bin/Debug/netstandard2.0
+cp -v ~/.nuget/packages/xamarin.forms/4.3.0.947036/lib/netstandard2.0/*.pdb ./bin/Debug/netstandard2.0
+cp -v ~/.nuget/packages/newtonsoft.json/12.0.2/lib/netstandard1.3/*.dll ./bin/Debug/netstandard2.0
+cd ./bin/Debug/netstandard2.0
+mono ~/Projects/wasm/mono-wasm/packager.exe --copy=always --out=./publish -debug entryassembly.dll 
+mkdir ./publish/css
+mkdir ./publish/js
+cp -rvf ../../../../assets/*.* ./publish
+cp -rvf ../../../../assets/css/*.* ./publish/css/
+cp -rvf ../../../../assets/js/*.* ./publish/
+
+dotnet clean
+dotnet restore
+dotnet build -p:Configuration=Release
+cp -v ~/.nuget/packages/xamarin.forms/4.3.0.947036/lib/netstandard2.0/*.dll ./bin/Release/netstandard2.0
+cp -v ~/.nuget/packages/newtonsoft.json/10.0.3/lib/netstandard1.3/*.dll ./bin/Release/netstandard2.0
+cd ./bin/Release/netstandard2.0
+mono ~/Projects/wasm/mono-wasm/packager.exe --copy=always --out=./publish entryassembly.dll 
+mkdir ./publish/css
+mkdir ./publish/js
+cp -rvf ../../../../assets/*.* ./publish
+cp -rvf ../../../../assets/css/*.* ./publish/css/
+cp -rvf ../../../../assets/js/*.* ./publish/
+
+-- update --
+dotnet build
+cd ./bin/Debug/netstandard2.0
+mono ~/Projects/wasm/mono-wasm/packager.exe --copy=always --out=./publish -debug assembly_name 
+
+
+-- debug --
+echo starting static file server...
+cd publish
+python server.py&
+echo starting mono debugging proxy...
+dotnet  ~/Projects/wasm/mono-wasm/dbg-proxy/netcoreapp3.0/ProxyDriver.dll&
+echo starting chrome...
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222&
+/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary http://localhost:9300&
+
+

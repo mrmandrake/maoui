@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Version>1.0.0</Version>
+    <Authors>mrmandrake</Authors>
+    <Description>WASM .NET</Description>
+    <PackageTags>Maoui;UI;WASM;WebAssembly</PackageTags>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="System.Text.Json" Version="4.6.0" />
+  </ItemGroup>  
+  <ItemGroup>
+    <EmbeddedResource Include="Client.js" />
+  </ItemGroup>
+  
+</Project>
