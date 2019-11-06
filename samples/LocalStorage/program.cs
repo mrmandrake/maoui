@@ -1,43 +1,26 @@
-﻿using System;
-using Maoui;
-using System.Threading;
+﻿using Maoui;
 using Xamarin.Forms;
+using WebAssembly;
 
-namespace MyFormsApp
-{
-    public class HelloWorld
-    {
-        public static void Main(String[] args)
-        {
-            var t = new Thread(delegate () {
-                Console.WriteLine("In thread.");
-                Thread.Sleep(1000);
-            });
-            t.Start();
-            t.Join();
-            Console.WriteLine("Hello, World!");
-        }
-    }
-
-    class Program
-    {
-        static void Main(string[] args)
+namespace LocalStorage
+{   
+    public class Program
+    {       
+        public static void Main()
         {
             Forms.Init();
             var page = new ContentPage();
             var stack = new StackLayout();
-            var button = new Xamarin.Forms.Button
-            {
-                Text = "Click me!"
-            };
+            var button = new Xamarin.Forms.Button { Text = "Click me!" };
             stack.Children.Add(button);
             page.Content = stack;
-            var count = 0;
-            button.Clicked += (s, e) =>
-            {
-                count++;
-                button.Text = $"Clicked {count} times";
+            // var count = 0;
+            button.Clicked += (s, e) => {
+                WebAssembly.Runtime.InvokeJS(@"window.localStorage.setItem('user', 'test');");
+                var result = WebAssembly.Runtime.InvokeJS(@"window.localStorage.getItem('user');");
+                button.Text = result;
             };
+            
             UI.Publish("/", page.GetMaouiElement());
         }
     }

@@ -6,12 +6,12 @@ using Xamarin.Forms.Xaml;
 using Color = Xamarin.Forms.Color;
 using Label = Xamarin.Forms.Label;
 
-namespace MyFormsApp
+namespace LocalStorage
 {
  
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             Forms.Init();
             var page = new ContentPage();

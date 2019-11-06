@@ -1,11 +1,11 @@
 ﻿using System;
 using Xamarin.Forms;
 
-namespace matrixclock
+namespace MatrixClock
 {
     class Program
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
             Forms.Init();
             //var page = new XamlEditorPage();

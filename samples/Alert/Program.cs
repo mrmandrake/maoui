@@ -2,7 +2,7 @@
 using Maoui;
 using Xamarin.Forms;
 
-namespace sample
+namespace Alert
 {
     class Program
     {

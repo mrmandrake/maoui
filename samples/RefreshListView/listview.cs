@@ -2,7 +2,7 @@
 using Xamarin.Forms.Xaml;
 using System.Linq;
 
-namespace Samples
+namespace RefreshListView
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public class RefreshListView : ContentPage

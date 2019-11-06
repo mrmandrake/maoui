@@ -8,7 +8,7 @@ namespace BugSweeperPage
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
             Forms.Init();
             UI.Publish("/", new BugsPage().GetMaouiElement());

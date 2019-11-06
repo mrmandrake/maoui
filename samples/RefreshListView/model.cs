@@ -2,7 +2,7 @@
 using System.Windows.Input;
 using Xamarin.Forms;
 
-namespace Samples
+namespace RefreshListView
 {
     public class RefreshListViewModel : BindableObject
     {

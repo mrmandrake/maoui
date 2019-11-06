@@ -2,7 +2,7 @@
 using Maoui;
 using Xamarin.Forms;
 
-namespace clock
+namespace Clock
 {
     class BoxViewClockPage : ContentPage
     {

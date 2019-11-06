@@ -1,7 +1,7 @@
 ﻿using System;
 using Xamarin.Forms;
 
-namespace MyFormsApp
+namespace LocalStorage
 {
     class Program
     {
@@ -17,7 +17,7 @@ namespace MyFormsApp
             };
             panel.Children.Add(titleLabel);
 
-            WebView webview = new WebView
+            Xamarin.Forms.WebView webview = new Xamarin.Forms.WebView
             {
                 Source = "http://www.xamarin.com"
             };

@@ -1,7 +1,7 @@
 ﻿using System;
 using Xamarin.Forms;
 
-namespace MyFormsApp
+namespace LocalStorage
 {
     class Program
     {
@@ -37,26 +37,26 @@ namespace MyFormsApp
             row2.Children.Add(new Entry { Text = shortText, FontSize = 8, VerticalOptions = LayoutOptions.Center });
             row2.Children.Add(new Entry { Text = shortText, FontSize = 16, VerticalOptions = LayoutOptions.Center });
             row2.Children.Add(new Entry { Text = shortText, FontSize = 32, VerticalOptions = LayoutOptions.Center });
-            row2.Children.Add(new Button { Text = shortText, FontSize = 32, VerticalOptions = LayoutOptions.Center });
+            row2.Children.Add(new Xamarin.Forms.Button { Text = global::MyFormsApp.Program.shortText, FontSize = 32, VerticalOptions = LayoutOptions.Center });
             rows.Children.Add(row2);
 
             var row3 = new StackLayout { Orientation = StackOrientation.Horizontal, BackgroundColor = Color.GhostWhite };
             row3.Children.Add(new Entry { Text = shortText, FontSize = 8, VerticalOptions = LayoutOptions.Center, FontAttributes = FontAttributes.Bold });
             row3.Children.Add(new Entry { Text = shortText, FontSize = 16, VerticalOptions = LayoutOptions.Center, FontAttributes = FontAttributes.Bold });
             row3.Children.Add(new Entry { Text = shortText, FontSize = 32, VerticalOptions = LayoutOptions.Center, FontAttributes = FontAttributes.Bold });
-            row3.Children.Add(new Button { Text = shortText, FontSize = 32, VerticalOptions = LayoutOptions.Center, FontAttributes = FontAttributes.Bold });
+            row3.Children.Add(new Xamarin.Forms.Button { Text = global::MyFormsApp.Program.shortText, FontSize = 32, VerticalOptions = LayoutOptions.Center, FontAttributes = FontAttributes.Bold });
             rows.Children.Add(row3);
 
             var row4 = new StackLayout { Orientation = StackOrientation.Horizontal, BackgroundColor = Color.Azure };
-            row4.Children.Add(new Button { Text = shortText, FontSize = 8, VerticalOptions = LayoutOptions.Center });
-            row4.Children.Add(new Button { Text = shortText, FontSize = 16, VerticalOptions = LayoutOptions.Center });
-            row4.Children.Add(new Button { Text = shortText, FontSize = 32, VerticalOptions = LayoutOptions.Center });
+            row4.Children.Add(new Xamarin.Forms.Button { Text = global::MyFormsApp.Program.shortText, FontSize = 8, VerticalOptions = LayoutOptions.Center });
+            row4.Children.Add(new Xamarin.Forms.Button { Text = global::MyFormsApp.Program.shortText, FontSize = 16, VerticalOptions = LayoutOptions.Center });
+            row4.Children.Add(new Xamarin.Forms.Button { Text = global::MyFormsApp.Program.shortText, FontSize = 32, VerticalOptions = LayoutOptions.Center });
             rows.Children.Add(row4);
 
             var row5 = new StackLayout { Orientation = StackOrientation.Horizontal, BackgroundColor = Color.GhostWhite };
-            row5.Children.Add(new Button { Text = shortText, FontSize = 8, VerticalOptions = LayoutOptions.Center, FontAttributes = FontAttributes.Bold });
-            row5.Children.Add(new Button { Text = shortText, FontSize = 16, VerticalOptions = LayoutOptions.Center, FontAttributes = FontAttributes.Bold });
-            row5.Children.Add(new Button { Text = shortText, FontSize = 32, VerticalOptions = LayoutOptions.Center, FontAttributes = FontAttributes.Bold });
+            row5.Children.Add(new Xamarin.Forms.Button { Text = global::MyFormsApp.Program.shortText, FontSize = 8, VerticalOptions = LayoutOptions.Center, FontAttributes = FontAttributes.Bold });
+            row5.Children.Add(new Xamarin.Forms.Button { Text = global::MyFormsApp.Program.shortText, FontSize = 16, VerticalOptions = LayoutOptions.Center, FontAttributes = FontAttributes.Bold });
+            row5.Children.Add(new Xamarin.Forms.Button { Text = global::MyFormsApp.Program.shortText, FontSize = 32, VerticalOptions = LayoutOptions.Center, FontAttributes = FontAttributes.Bold });
             rows.Children.Add(row5);
 
             var row6 = new StackLayout { Orientation = StackOrientation.Horizontal, BackgroundColor = Color.Azure };

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Xamarin.Forms.Internals;
+using Maoui;
 
 namespace Maoui.Forms
 {

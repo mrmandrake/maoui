@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Net;
-using System.Runtime.InteropServices;
 
 namespace Maoui
 {
@@ -14,59 +13,61 @@ namespace Maoui
     {
         public const int MaxFps = 30;
 
-        static readonly ManualResetEvent started = new ManualResetEvent(false);
+        private static readonly ManualResetEvent started = new ManualResetEvent(false);
 
-        static CancellationTokenSource serverCts;
+        private static CancellationTokenSource serverCts;
 
-        static readonly Dictionary<string, RequestHandler> publishedPaths =
-            new Dictionary<string, RequestHandler>();
+        private static readonly Dictionary<string, RequestHandler> publishedPaths = new Dictionary<string, RequestHandler>();
 
-        static readonly byte[] clientJsBytes;
-        static readonly string clientJsEtag;
+        private static readonly Dictionary<string, WebAssemblySession> globalElementSessions = new Dictionary<string, WebAssemblySession>();
+
+        private static readonly byte[] clientJsBytes;
+
+        private static readonly string clientJsEtag;
 
         public static byte[] ClientJsBytes => clientJsBytes;
         public static string ClientJsEtag => clientJsEtag;
 
-        public static string HeadHtml { get; set; } = @"<link rel=""stylesheet"" href=""https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"" />";
-        public static string BodyHeaderHtml { get; set; } = @"";
-        public static string BodyFooterHtml { get; set; } = @"";
+        private static string _host = "*";
 
-        static string host = "*";
         public static string Host
         {
-            get => host;
+            get => _host;
             set
             {
-                if (!string.IsNullOrWhiteSpace(value) && host != value)
+                if (!string.IsNullOrWhiteSpace(value) && _host != value)
                 {
-                    host = value;
+                    _host = value;
                     Restart();
                 }
             }
         }
-        static int port = 8080;
+
+        private static int _port = 8080;
+
         public static int Port
         {
-            get => port;
+            get => _port;
             set
             {
-                if (port != value)
+                if (_port != value)
                 {
-                    port = value;
+                    _port = value;
                     Restart();
                 }
             }
         }
-        static bool serverEnabled = true;
+
+        private static bool _serverEnabled = true;
         public static bool ServerEnabled
         {
-            get => serverEnabled;
+            get => _serverEnabled;
             set
             {
-                if (serverEnabled != value)
+                if (_serverEnabled != value)
                 {
-                    serverEnabled = value;
-                    if (serverEnabled)
+                    _serverEnabled = value;
+                    if (_serverEnabled)
                         Restart();
                     else
                         Stop();
@@ -77,16 +78,63 @@ namespace Maoui
         [Preserve]
         static void DisableServer()
         {
+            Trace.trace();
             ServerEnabled = false;
+        }
+
+        [Preserve]
+        public static void StartWebAssemblySession(string sessionId, string elementPath, string initialSize)
+        {
+            Trace.trace();
+            Element element;
+            RequestHandler handler;
+            lock (publishedPaths)
+            {
+                publishedPaths.TryGetValue(elementPath, out handler);
+            }
+
+            var disposeElementWhenDone = true;
+            if (handler is ElementHandler eh)
+            {
+                element = eh.GetElement();
+                disposeElementWhenDone = eh.DisposeElementWhenDone;
+            }
+            else
+                element = new Div();
+
+            var ops = initialSize.Split(' ');
+            var initialWidth = double.Parse(ops[0]);
+            var initialHeight = double.Parse(ops[1]);
+            var g = new WebAssemblySession(sessionId, element, disposeElementWhenDone, initialWidth, initialHeight, Trace.Error);
+            lock (globalElementSessions)
+            {
+                globalElementSessions[sessionId] = g;
+            }
+            g.StartSession();
+        }
+
+        [Preserve]
+        public static void ReceiveWebAssemblySessionMessageJson(string sessionId, string json)
+        {
+            Trace.trace();
+            WebAssemblySession g;
+            lock (globalElementSessions)
+            {
+                if (!globalElementSessions.TryGetValue(sessionId, out g))
+                    return;
+            }
+
+            g.ReceiveMessageJson(json);
         }
 
         static UI()
         {
+            Trace.trace();
             var asm = typeof(UI).Assembly;
-            // System.Console.WriteLine("ASM = {0}", asm);
-            // foreach (var n in asm.GetManifestResourceNames()) {
-            //     System.Console.WriteLine("  {0}", n);
-            // }
+            Trace.Log($"ASM = {asm}");
+            foreach (var n in asm.GetManifestResourceNames())
+                Trace.Log($"  {n}");
+
             using (var s = asm.GetManifestResourceStream("Maoui.Client.js"))
             {
                 if (s == null)
@@ -101,51 +149,58 @@ namespace Maoui
 
         static void Publish(string path, RequestHandler handler)
         {
-            //Console.WriteLine ($"PUBLISH {path} {handler}");
+            Trace.trace();
+            Trace.Log($"PUBLISH {path} {handler}");
             lock (publishedPaths) publishedPaths[path] = handler;
             Start();
         }
 
         public static void Publish(string path, Func<Element> elementCtor, bool disposeElementWhenDone = true)
         {
+            Trace.trace();
             Publish(path, new ElementHandler(elementCtor, disposeElementWhenDone));
         }
 
         public static void Publish(string path, Element element, bool disposeElementWhenDone = true)
         {
+            Trace.trace();
             Publish(path, () => element, disposeElementWhenDone);
         }
 
         public static void PublishFile(string filePath)
         {
+            Trace.trace();
             var path = "/" + System.IO.Path.GetFileName(filePath);
             PublishFile(path, filePath);
         }
 
         public static void PublishFile(string path, string filePath, string contentType = null)
         {
+            Trace.trace();
             var data = System.IO.File.ReadAllBytes(filePath);
             if (contentType == null)
-            {
                 contentType = GuessContentType(path, filePath);
-            }
+
             var etag = "\"" + Utilities.GetShaHash(data) + "\"";
             Publish(path, new DataHandler(data, etag, contentType));
         }
 
         public static void PublishFile(string path, byte[] data, string contentType)
         {
+            Trace.trace();
             var etag = "\"" + Utilities.GetShaHash(data) + "\"";
             Publish(path, new DataHandler(data, etag, contentType));
         }
 
         public static void PublishFile(string path, byte[] data, string etag, string contentType)
         {
+            Trace.trace();
             Publish(path, new DataHandler(data, etag, contentType));
         }
 
         public static bool TryGetFileContentAtPath(string path, out FileContent file)
         {
+            Trace.trace();
             RequestHandler handler;
             lock (publishedPaths)
             {
@@ -169,20 +224,15 @@ namespace Maoui
             return false;
         }
 
-        public class FileContent
-        {
-            public string ContentType { get; set; }
-            public string Etag { get; set; }
-            public byte[] Content { get; set; }
-        }
-
         public static void PublishJson(string path, Func<object> ctor)
         {
+            Trace.trace();
             Publish(path, new JsonHandler(ctor));
         }
 
         public static void PublishJson(string path, object value)
         {
+            Trace.trace();
             var data = JsonHandler.GetData(value);
             var etag = "\"" + Utilities.GetShaHash(data) + "\"";
             Publish(path, new DataHandler(data, etag, JsonHandler.ContentType));
@@ -190,26 +240,30 @@ namespace Maoui
 
         public static void PublishCustomResponse(string path, Action<HttpListenerContext, CancellationToken> responder)
         {
+            Trace.trace();
             Publish(path, new CustomHandler(responder));
         }
 
         static string GuessContentType(string path, string filePath)
         {
+            Trace.trace();
             return null;
         }
 
         public static void Present(string path, object presenter = null)
         {
+            Trace.trace();
             WaitUntilStarted();
             var url = GetUrl(path);
-            Console.WriteLine($"PRESENT {url}");
+            Trace.Log($"PRESENT {url}");
             Platform.OpenBrowser(url, presenter);
         }
 
         public static string GetUrl(string path)
         {
-            var localhost = host == "*" ? "localhost" : host;
-            var url = $"http://{localhost}:{port}{path}";
+            Trace.trace();
+            var localhost = _host == "*" ? "localhost" : _host;
+            var url = $"http://{localhost}:{_port}{path}";
             return url;
         }
 
@@ -217,37 +271,42 @@ namespace Maoui
 
         static void Start()
         {
-            if (!serverEnabled) return;
-            if (serverCts != null) return;
+            Trace.trace();
+            if ((!_serverEnabled) || (serverCts != null))
+                return;
+
             serverCts = new CancellationTokenSource();
             var token = serverCts.Token;
-            var listenerPrefix = $"http://{host}:{port}/";
+            var listenerPrefix = $"http://{_host}:{_port}/";
             Task.Run(() => RunAsync(listenerPrefix, token), token);
         }
 
         static void Stop()
         {
+            Trace.trace();
             var scts = serverCts;
-            if (scts == null) return;
+            if (scts == null)
+                return;
+
             serverCts = null;
             started.Reset();
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"Stopping...");
-            Console.ResetColor();
-
+            Trace.Log($"Stopping...");
             scts.Cancel();
         }
 
         static void Restart()
         {
-            if (serverCts == null) return;
+            Trace.trace();
+            if (serverCts == null)
+                return;
             Stop();
             Start();
         }
 
         static async Task RunAsync(string listenerPrefix, CancellationToken token)
         {
+            Trace.trace();
             HttpListener listener = null;
             var wait = 5;
 
@@ -263,44 +322,39 @@ namespace Maoui
                 }
                 catch (System.Net.Sockets.SocketException ex)
                 {
-                    Console.WriteLine($"{listenerPrefix} error: {ex.Message}. Trying again in {wait} seconds...");
+                    Trace.Error($"{listenerPrefix} error: {ex.Message}. Trying again in {wait} seconds...");
                     await Task.Delay(wait * 1000).ConfigureAwait(false);
                 }
                 catch (System.Net.HttpListenerException ex)
                 {
-                    Console.WriteLine($"{listenerPrefix} error: {ex.Message}. Trying again in {wait} seconds...");
+                    Trace.Error($"{listenerPrefix} error: {ex.Message}. Trying again in {wait} seconds...");
                     await Task.Delay(wait * 1000).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
-                    Error("Error listening", ex);
+                    Trace.Error(ex);
                     return;
                 }
             }
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"Listening at {listenerPrefix}...");
-            Console.ResetColor();
 
+            Trace.Log($"Listening at {listenerPrefix}...");
             while (!token.IsCancellationRequested)
             {
                 var listenerContext = await listener.GetContextAsync().ConfigureAwait(false);
                 if (listenerContext.Request.IsWebSocketRequest)
-                {
                     ProcessWebSocketRequest(listenerContext, token);
-                }
                 else
-                {
                     ProcessRequest(listenerContext, token);
-                }
             }
         }
 
         static void ProcessRequest(HttpListenerContext listenerContext, CancellationToken token)
         {
+            Trace.trace();
             var url = listenerContext.Request.Url;
             var path = url.LocalPath;
 
-            Console.WriteLine($"{listenerContext.Request.HttpMethod} {url.LocalPath}");
+            Trace.Log($"{listenerContext.Request.HttpMethod} {url.LocalPath}");
 
             var response = listenerContext.Response;
 
@@ -340,16 +394,13 @@ namespace Maoui
                     }
                     catch (Exception ex)
                     {
-                        Error("Handler failed to respond", ex);
+                        Trace.Error(ex);
                         try
                         {
                             response.StatusCode = 500;
                             response.Close();
                         }
-                        catch
-                        {
-                            // Ignore ending the response errors
-                        }
+                        catch { }
                     }
                 }
                 else
@@ -360,178 +411,10 @@ namespace Maoui
             }
         }
 
-        abstract class RequestHandler
-        {
-            public abstract void Respond(HttpListenerContext listenerContext, CancellationToken token);
-        }
-
-        class ElementHandler : RequestHandler
-        {
-            readonly Lazy<Element> element;
-
-            public bool DisposeElementWhenDone { get; }
-
-            public ElementHandler(Func<Element> ctor, bool disposeElementWhenDone)
-            {
-                element = new Lazy<Element>(ctor);
-                DisposeElementWhenDone = disposeElementWhenDone;
-            }
-
-            public Element GetElement() => element.Value;
-
-            public override void Respond(HttpListenerContext listenerContext, CancellationToken token)
-            {
-                var url = listenerContext.Request.Url;
-                var path = url.LocalPath;
-                var response = listenerContext.Response;
-
-                response.StatusCode = 200;
-                response.ContentType = "text/html";
-                response.ContentEncoding = Encoding.UTF8;
-                var html = Encoding.UTF8.GetBytes(RenderTemplate(path));
-                response.ContentLength64 = html.LongLength;
-                using (var s = response.OutputStream)
-                {
-                    s.Write(html, 0, html.Length);
-                }
-                response.Close();
-            }
-        }
-
-        public static string RenderTemplate(string webSocketPath, string title = "", string initialHtml = "")
-        {
-            using (var w = new System.IO.StringWriter())
-            {
-                RenderTemplate(w, webSocketPath, title, initialHtml);
-                return w.ToString();
-            }
-        }
-
-        static string EscapeHtml(string text)
-        {
-            return text.Replace("&", "&amp;").Replace("<", "&lt;");
-        }
-
-        public static void RenderTemplate(TextWriter writer, string webSocketPath, string title, string initialHtml)
-        {
-            writer.Write(@"<!DOCTYPE html><html><head><title>");
-            writer.Write(EscapeHtml(title));
-            writer.Write(@"</title><meta name=""viewport"" content=""width=device-width, initial-scale=1""/>");
-            writer.WriteLine(HeadHtml);
-            writer.WriteLine(@"  <style>");
-            writer.WriteLine(rules.ToString());
-            writer.WriteLine(@"  </style></head><body>");
-            writer.WriteLine(BodyHeaderHtml);
-            writer.WriteLine(@"<div id=""ooui-body"" class=""container-fluid"" style=""padding:0;margin:0"">");
-            writer.WriteLine(initialHtml);
-            writer.Write(@"</div><script src=""/ooui.js""></script><script>ooui(""");
-            writer.Write(webSocketPath);
-            writer.WriteLine(@""");</script>");
-            writer.WriteLine(BodyFooterHtml);
-            writer.WriteLine(@"</body></html>");
-        }
-
-        class DataHandler : RequestHandler
-        {
-            readonly byte[] data;
-            readonly string etag;
-            readonly string contentType;
-
-            public byte[] Data => data;
-            public string Etag => etag;
-            public string ContentType => contentType;
-
-            public DataHandler(byte[] data, string etag, string contentType = null)
-            {
-                this.data = data;
-                this.etag = etag;
-                this.contentType = contentType;
-            }
-
-            public override void Respond(HttpListenerContext listenerContext, CancellationToken token)
-            {
-                var url = listenerContext.Request.Url;
-                var path = url.LocalPath;
-                var response = listenerContext.Response;
-
-                var inm = listenerContext.Request.Headers.Get("If-None-Match");
-                if (!string.IsNullOrEmpty(inm) && inm == etag)
-                {
-                    response.StatusCode = 304;
-                }
-                else
-                {
-                    response.StatusCode = 200;
-                    response.AddHeader("Etag", etag);
-                    if (!string.IsNullOrEmpty(contentType))
-                        response.ContentType = contentType;
-                    response.ContentLength64 = data.LongLength;
-
-                    using (var s = response.OutputStream)
-                    {
-                        s.Write(data, 0, data.Length);
-                    }
-                }
-                response.Close();
-            }
-        }
-
-        class JsonHandler : RequestHandler
-        {
-            public const string ContentType = "application/json; charset=utf-8";
-
-            readonly Func<object> ctor;
-
-            public JsonHandler(Func<object> ctor)
-            {
-                this.ctor = ctor;
-            }
-
-            public static byte[] GetData(object obj)
-            {
-                var r = Maoui.JsonConvert.SerializeObject(obj);
-                var e = new UTF8Encoding(false);
-                return e.GetBytes(r);
-            }
-
-            public override void Respond(HttpListenerContext listenerContext, CancellationToken token)
-            {
-                var response = listenerContext.Response;
-
-                var data = GetData(ctor());
-
-                response.StatusCode = 200;
-                response.ContentType = ContentType;
-                response.ContentLength64 = data.LongLength;
-
-                using (var s = response.OutputStream)
-                {
-                    s.Write(data, 0, data.Length);
-                }
-                response.Close();
-            }
-        }
-
-        class CustomHandler : RequestHandler
-        {
-            readonly Action<HttpListenerContext, CancellationToken> responder;
-
-            public CustomHandler(Action<HttpListenerContext, CancellationToken> responder)
-            {
-                this.responder = responder;
-            }
-
-            public override void Respond(HttpListenerContext listenerContext, CancellationToken token)
-            {
-                responder(listenerContext, token);
-            }
-        }
-
         static async void ProcessWebSocketRequest(HttpListenerContext listenerContext, CancellationToken serverToken)
         {
-            //
+            Trace.trace();
             // Find the element
-            //
             var url = listenerContext.Request.Url;
             var path = url.LocalPath;
 
@@ -560,58 +443,50 @@ namespace Maoui
             {
                 listenerContext.Response.StatusCode = 500;
                 listenerContext.Response.Close();
-                Error("Failed to create element", ex);
+                Trace.Error(ex);
                 return;
             }
 
-            //
             // Connect the web socket
-            //
             System.Net.WebSockets.WebSocketContext webSocketContext = null;
             System.Net.WebSockets.WebSocket webSocket = null;
             try
             {
                 webSocketContext = await listenerContext.AcceptWebSocketAsync(subProtocol: "ooui").ConfigureAwait(false);
                 webSocket = webSocketContext.WebSocket;
-                Console.WriteLine("WEBSOCKET {0}", listenerContext.Request.Url.LocalPath);
+                Trace.Log($"WEBSOCKET {listenerContext.Request.Url.LocalPath}");
             }
             catch (Exception ex)
             {
                 listenerContext.Response.StatusCode = 500;
                 listenerContext.Response.Close();
-                Error("Failed to accept WebSocket", ex);
+                Trace.Error(ex);
                 return;
             }
 
-            //
             // Set the element's dimensions
-            //
-            var query =
-                (from part in listenerContext.Request.Url.Query.Split(new[] { '?', '&' })
-                 where part.Length > 0
-                 let kvs = part.Split('=')
-                 where kvs.Length == 2
-                 select kvs).ToDictionary(x => Uri.UnescapeDataString(x[0]), x => Uri.UnescapeDataString(x[1]));
+            var query = (from part in listenerContext.Request.Url.Query.Split(new[] { '?', '&' })
+                         where part.Length > 0
+                         let kvs = part.Split('=')
+                         where kvs.Length == 2
+                         select kvs).ToDictionary(x => Uri.UnescapeDataString(x[0]), x => Uri.UnescapeDataString(x[1]));
+
             if (!query.TryGetValue("w", out var wValue) || string.IsNullOrEmpty(wValue))
-            {
                 wValue = "640";
-            }
+
             if (!query.TryGetValue("h", out var hValue) || string.IsNullOrEmpty(hValue))
-            {
                 hValue = "480";
-            }
+
             var icult = System.Globalization.CultureInfo.InvariantCulture;
             if (!double.TryParse(wValue, System.Globalization.NumberStyles.Any, icult, out var w))
                 w = 640;
             if (!double.TryParse(hValue, System.Globalization.NumberStyles.Any, icult, out var h))
                 h = 480;
 
-            //
             // Create a new session and let it handle everything from here
-            //
             try
             {
-                var session = new WebSocketSession(webSocket, element, disposeElementWhenDone, w, h, Error, serverToken);
+                var session = new WebSocketSession(webSocket, element, disposeElementWhenDone, w, h, Trace.Error, serverToken);
                 await session.RunAsync().ConfigureAwait(false);
             }
             catch (System.Net.WebSockets.WebSocketException ex) when (ex.WebSocketErrorCode == System.Net.WebSockets.WebSocketError.ConnectionClosedPrematurely)
@@ -620,126 +495,11 @@ namespace Maoui
             }
             catch (Exception ex)
             {
-                Error("Web socket failed", ex);
+                Trace.Error(ex);
             }
             finally
             {
                 webSocket?.Dispose();
-            }
-        }
-
-        static void Error(string message, Exception ex)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("{0}: {1}", message, ex);
-            Console.ResetColor();
-        }
-
-        static readonly Dictionary<string, WebAssemblySession> globalElementSessions = new Dictionary<string, WebAssemblySession>();
-
-        [Preserve]
-        public static void StartWebAssemblySession(string sessionId, string elementPath, string initialSize)
-        {
-            Element element;
-            RequestHandler handler;
-            lock (publishedPaths)
-            {
-                publishedPaths.TryGetValue(elementPath, out handler);
-            }
-            var disposeElementWhenDone = true;
-            if (handler is ElementHandler eh)
-            {
-                element = eh.GetElement();
-                disposeElementWhenDone = eh.DisposeElementWhenDone;
-            }
-            else
-            {
-                element = new Div();
-            }
-
-            var ops = initialSize.Split(' ');
-            var initialWidth = double.Parse(ops[0]);
-            var initialHeight = double.Parse(ops[1]);
-            var g = new WebAssemblySession(sessionId, element, disposeElementWhenDone, initialWidth, initialHeight, Error);
-            lock (globalElementSessions)
-            {
-                globalElementSessions[sessionId] = g;
-            }
-            g.StartSession();
-        }
-
-        [Preserve]
-        public static void ReceiveWebAssemblySessionMessageJson(string sessionId, string json)
-        {
-            WebAssemblySession g;
-            lock (globalElementSessions)
-            {
-                if (!globalElementSessions.TryGetValue(sessionId, out g))
-                    return;
-            }
-            g.ReceiveMessageJson(json);
-        }
-
-
-        static readonly Dictionary<string, Style> styles =
-            new Dictionary<string, Style>();
-        static readonly StyleSelectors rules = new StyleSelectors();
-
-        public static StyleSelectors Styles => rules;
-
-        public class StyleSelectors
-        {
-            public Style this[string selector]
-            {
-                get
-                {
-                    var key = selector ?? "";
-                    lock (styles)
-                    {
-                        if (!styles.TryGetValue(key, out Style r))
-                        {
-                            r = new Style();
-                            styles.Add(key, r);
-                        }
-                        return r;
-                    }
-                }
-                set
-                {
-                    var key = selector ?? "";
-                    lock (styles)
-                    {
-                        if (value == null)
-                        {
-                            styles.Remove(key);
-                        }
-                        else
-                        {
-                            styles[key] = value;
-                        }
-                    }
-                }
-            }
-
-            public void Clear()
-            {
-                lock (styles)
-                {
-                    styles.Clear();
-                }
-            }
-
-            public override string ToString()
-            {
-                lock (styles)
-                {
-                    var q =
-                        from s in styles
-                        let v = s.Value.ToString()
-                        where v.Length > 0
-                        select s.Key + " {" + s.Value.ToString() + "}";
-                    return String.Join("\n", q);
-                }
             }
         }
     }

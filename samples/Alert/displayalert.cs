@@ -3,7 +3,7 @@ using Maoui;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace sample
+namespace Alert
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public class DisplayAlertPage : ContentPage

@@ -2,7 +2,7 @@
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Samples
+namespace RefreshListView
 {
     class Program
     {

@@ -5,11 +5,11 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using XamlEditor;
 
-namespace EntryNamespace
+namespace XamlEditor
 {
-    class EntryClass
+    class Program
     {       
-        static void EntryPoint()
+        static void Main()
         {
             Forms.Init();
             var page = new XamlEditorPage();

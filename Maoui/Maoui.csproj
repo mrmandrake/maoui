@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
-    <PackageReference Include="System.Text.Json" Version="4.6.0" />
+    <PackageReference Include="webassembly.bindings" Version="3.0.2" />
   </ItemGroup>  
   <ItemGroup>
     <EmbeddedResource Include="Client.js" />
