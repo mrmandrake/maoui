@@ -24,13 +24,9 @@ namespace Maoui.Forms.Cells
                 var reflectableType = renderer as System.Reflection.IReflectableType;
                 var rendererType = reflectableType != null ? reflectableType.GetTypeInfo().AsType() : renderer.GetType();
                 if (rendererType == type || (renderer is DefaultRenderer && type == null))
-                {
                     renderer.SetElement(cell.View);
-                }
                 else
-                {
                     renderer = GetNewRenderer(cell);
-                }
             }
 
             Platform.SetRenderer(cell.View, renderer);

@@ -59,3 +59,10 @@ echo starting chrome...
 /Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary http://localhost:9300&
 
 
+
+
+-- teka publish
+rm -rvf ../teka/wwwroot
+mv ./Threads/bin/Debug/netstandard2.0/publish ../teka/wwwroot
+cd ../Teka
+dotnet run

@@ -155,6 +155,8 @@ namespace Maoui
                         case CompositeOperation.Luminosity:
                             SendSet("globalCompositeOperation", "luminosity");
                             break;
+                        default:
+                            break;
                     }
                 }
             }

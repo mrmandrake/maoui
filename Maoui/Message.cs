@@ -137,6 +137,9 @@ namespace Maoui
                         case 'v':
                             m.Value = JsonConvert.ReadJsonValue(json, i + 4);
                             break;
+
+                        default:
+                            break;
                     }
                 }
                 else if (n > 5 && json[i] == '\"' && json[i + 3] == '\"' && json[i + 4] == ':' && json[i + 5] == '\"')
@@ -152,6 +155,9 @@ namespace Maoui
                                 m.TargetId = json.Substring(i, se - i);
                                 i = se + 1;
                             }
+                            break;
+
+                        default:
                             break;
                     }
                 }

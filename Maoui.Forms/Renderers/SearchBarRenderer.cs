@@ -17,18 +17,14 @@ namespace Maoui.Forms.Renderers
         {
             var text = Element.Text;
             if (text == null || text.Length == 0)
-            {
                 text = Element.Placeholder;
-            }
+
             Size size;
             if (text == null || text.Length == 0)
-            {
                 size = new Size(Element.FontSize * 0.25, Element.FontSize);
-            }
             else
-            {
                 size = text.MeasureSize(Element.FontFamily, Element.FontSize, Element.FontAttributes, widthConstraint, heightConstraint);
-            }
+
             size = new Size(size.Width, size.Height + Element.FontSize);
             return new SizeRequest(size, size);
         }

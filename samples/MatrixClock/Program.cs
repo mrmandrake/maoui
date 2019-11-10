@@ -1,5 +1,7 @@
 ﻿using System;
 using Xamarin.Forms;
+using Maoui;
+using Maoui.Forms;
 
 namespace MatrixClock
 {
@@ -8,8 +10,7 @@ namespace MatrixClock
         public static void Main()
         {
             Forms.Init();
-            //var page = new XamlEditorPage();
-            //UI.Publish("/", page.GetOouiElement());
+            UI.Publish("/", new DotMatrixClockPage().GetMaouiElement());
         }
     }
 }

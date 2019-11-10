@@ -19,8 +19,7 @@ namespace Maoui
             set => SetAttributeProperty("height", value < 0 ? 0 : value);
         }
 
-        public Canvas()
-            : base("canvas")
+        public Canvas() : base("canvas")
         {
             context2d.MessageSent += Send;
         }

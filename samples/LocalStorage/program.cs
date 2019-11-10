@@ -2,7 +2,7 @@
 using Xamarin.Forms;
 using WebAssembly;
 
-namespace LocalStorage
+namespace WebView
 {   
     public class Program
     {       
@@ -16,6 +16,10 @@ namespace LocalStorage
             page.Content = stack;
             // var count = 0;
             button.Clicked += (s, e) => {
+                var window = (JSObject)Runtime.GetGlobalObject("window");
+                var location = (JSObject)window.GetObjectProperty("location");
+                // window.Invoke()
+
                 WebAssembly.Runtime.InvokeJS(@"window.localStorage.setItem('user', 'test');");
                 var result = WebAssembly.Runtime.InvokeJS(@"window.localStorage.getItem('user');");
                 button.Text = result;

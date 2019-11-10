@@ -3,7 +3,7 @@ using System.Text;
 using WebAssembly;
 using WebAssembly.Core;
 
-namespace WebGLDotNET
+namespace WebGl
 {
     public abstract class JSHandler : IDisposable
     {
@@ -25,9 +25,7 @@ namespace WebGLDotNET
         protected virtual void Dispose(bool disposing)
         {
             if (IsDisposed)
-            {
                 return;
-            }
 
             IsDisposed = true;
 
@@ -85,10 +83,7 @@ namespace WebGLDotNET
             string windowPropertyName = WindowPropertyName)
         {
             if (!CheckWindowPropertyExists(windowPropertyName))
-            {
-                throw new PlatformNotSupportedException(
-                    $"The context '{contextType}' is not supported in this browser");
-            }
+                throw new PlatformNotSupportedException($"The context '{contextType}' is not supported in this browser");
 
             gl = (JSObject)canvas.Invoke("getContext", contextType, contextAttributes?.Handle);
         }
@@ -132,7 +127,6 @@ namespace WebGLDotNET
         {
             var window = (JSObject)Runtime.GetGlobalObject();
             var exists = window.GetObjectProperty(property) != null;
-
             return exists;
         }
 
@@ -151,7 +145,6 @@ namespace WebGLDotNET
                 {
                     var disposable = (IDisposable)jsArray;
                     disposable.Dispose();
-
                 }
             }
         }
@@ -173,9 +166,7 @@ namespace WebGLDotNET
                     dump.Append(Dump(item));
 
                     if (i < (args.Length - 1))
-                    {
                         dump.Append(", ");
-                    }
                 }
 
                 dump.Append($") = {Dump(result)}");
@@ -190,8 +181,7 @@ namespace WebGLDotNET
         {
             var rawResult = Invoke(method, args);
 
-            var result = new T
-            {
+            var result = new T {
                 Handle = (JSObject)rawResult
             };
 
@@ -203,16 +193,12 @@ namespace WebGLDotNET
             var temp = InvokeForArray<int>(method, args);
 
             if (temp == null)
-            {
                 return null;
-            }
 
             var result = new uint[temp.Length];
 
             for (int i = 0; i < temp.Length; i++)
-            {
                 result[i] = (uint)temp[i];
-            }
 
             return result;
         }
@@ -262,7 +248,8 @@ namespace WebGLDotNET
                 {
                     arg = jsHandler.Handle;
                 }
-                else if (arg is System.Array array)
+                else 
+                if (arg is System.Array array)
                 {
                     if (((System.Array)arg).GetType().GetElementType().IsPrimitive)
                         arg = CastNativeArray(array);
@@ -272,9 +259,8 @@ namespace WebGLDotNET
                         // helper functions for doing this.  I will put it on my todo list.
                         var argArray = new WebAssembly.Core.Array();
                         foreach(var item in (System.Array)arg)
-                        {
                             argArray.Push(item);
-                        }
+
                         arg = argArray;
                     }
                 }

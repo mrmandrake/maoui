@@ -103,10 +103,7 @@ namespace Maoui.Forms.Renderers
             if (disposing)
             {
                 if (Control != null)
-                {
-                    //Control.Input -= OnStarted;
                     Control.Change -= OnEnded;
-                }
             }
 
             base.Dispose(disposing);

@@ -62,9 +62,7 @@ namespace Maoui.Forms.Renderers
             if (e.NewElement != null)
             {
                 if (Control == null)
-                {
                     SetNativeControl(new NativeLabel());
-                }
 
                 UpdateText();
                 UpdateTextColor();
@@ -116,33 +114,6 @@ namespace Maoui.Forms.Renderers
         void UpdateLineBreakMode()
         {
             _perfectSizeValid = false;
-            //switch (Element.LineBreakMode)
-            //{
-            //    case LineBreakMode.NoWrap:
-            //        Control.LineBreakMode = UILineBreakMode.Clip;
-            //        Control.Lines = 1;
-            //        break;
-            //    case LineBreakMode.WordWrap:
-            //        Control.LineBreakMode = UILineBreakMode.WordWrap;
-            //        Control.Lines = 0;
-            //        break;
-            //    case LineBreakMode.CharacterWrap:
-            //        Control.LineBreakMode = UILineBreakMode.CharacterWrap;
-            //        Control.Lines = 0;
-            //        break;
-            //    case LineBreakMode.HeadTruncation:
-            //        Control.LineBreakMode = UILineBreakMode.HeadTruncation;
-            //        Control.Lines = 1;
-            //        break;
-            //    case LineBreakMode.MiddleTruncation:
-            //        Control.LineBreakMode = UILineBreakMode.MiddleTruncation;
-            //        Control.Lines = 1;
-            //        break;
-            //    case LineBreakMode.TailTruncation:
-            //        Control.LineBreakMode = UILineBreakMode.TailTruncation;
-            //        Control.Lines = 1;
-            //        break;
-            //}
         }
 
         bool isTextFormatted;

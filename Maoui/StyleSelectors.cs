@@ -43,7 +43,7 @@ namespace Maoui
             }
         }
 
-        public void Clear()
+        public static void Clear()
         {
             lock (styles)
             {

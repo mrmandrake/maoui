@@ -45,10 +45,7 @@ namespace Maoui.Forms.Renderers
             base.OnElementPropertyChanged(sender, e);
 
             if (e.PropertyName == Picker.ItemsSourceProperty.PropertyName)
-            {
                 UpdateItems();
-            }
-
         }
 
         protected override void Dispose(bool disposing)

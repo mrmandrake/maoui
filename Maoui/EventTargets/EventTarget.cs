@@ -50,7 +50,9 @@ namespace Maoui
 
         public virtual EventTarget GetElementById(string id)
         {
-            if (id == Id) return this;
+            if (id == Id) 
+                return this;
+
             return null;
         }
 
@@ -87,8 +89,10 @@ namespace Maoui
 
         public void RemoveEventListener(string eventType, TargetEventHandler handler)
         {
-            if (eventType == null) return;
-            if (handler == null) return;
+            if (eventType == null) 
+                return;
+            if (handler == null) 
+                return;
 
             List<TargetEventHandler> handlers;
             lock (eventListeners)
@@ -162,6 +166,9 @@ namespace Maoui
 
         protected void UpdateStateMessages(Action<List<Message>> updater)
         {
+            if (updater == null)
+                return;
+            
             lock (stateMessages) updater(stateMessages);
         }
 
@@ -197,6 +204,9 @@ namespace Maoui
                     return true;
                 case MessageType.Listen:
                     AddStateMessage(message);
+                    break;
+
+                default:
                     break;
             }
 

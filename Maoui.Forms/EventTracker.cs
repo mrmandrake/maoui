@@ -104,7 +104,6 @@ namespace Maoui.Forms
                 if (nativeRecognizer != null)
                 {
                     AddGestureRecognizer(_handler, nativeRecognizer);
-
                     _gestureRecognizers[recognizer] = nativeRecognizer;
                 }
             }

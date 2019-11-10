@@ -5,8 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Maoui.Forms\Maoui.Forms.csproj" />
-    <ProjectReference Include="..\..\Maoui\Maoui.csproj" />
+    <ProjectReference Include="..\Maoui\Maoui.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="webassembly.bindings" Version="3.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
 
 </Project>

@@ -24,8 +24,7 @@ namespace Maoui.Forms.Renderers
 
             if (Control == null)
             {
-                var range = new Input
-                {
+                var range = new Input {
                     ClassName = "form-control",
                     Type = InputType.Range
                 };
@@ -59,13 +58,8 @@ namespace Maoui.Forms.Renderers
 
             _disposed = true;
 
-            if (disposing)
-            {
-                if (Control != null)
-                {
-                    Control.Change -= OnValueChange;
-                }
-            }
+            if ((disposing) && (Control != null))
+                Control.Change -= OnValueChange;
 
             base.Dispose(disposing);
         }

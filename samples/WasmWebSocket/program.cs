@@ -6,7 +6,7 @@ using Xamarin.Forms.Xaml;
 using Color = Xamarin.Forms.Color;
 using Label = Xamarin.Forms.Label;
 
-namespace LocalStorage
+namespace WebView
 {
  
     class Program

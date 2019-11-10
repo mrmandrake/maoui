@@ -18,13 +18,11 @@ namespace Maoui.Forms.Renderers
         {
             var text = Element.Text;
             if (text == null || text.Length == 0)
-            {
                 text = Element.Placeholder;
-            }
+
             if (text == null || text.Length == 0)
-            {
                 text = " ";
-            }
+
             var size = text.MeasureSize(Element.FontFamily, Element.FontSize, Element.FontAttributes, widthConstraint, heightConstraint);
             var vpadding = 16;
             var hpadding = 32;
@@ -42,9 +40,8 @@ namespace Maoui.Forms.Renderers
             if (disposing)
             {
                 if (Element != null)
-                {
                     Element.FocusChangeRequested -= Element_FocusChangeRequested;
-                }
+
                 if (Control != null)
                 {
                     Control.Input -= OnEditingChanged;
@@ -60,9 +57,7 @@ namespace Maoui.Forms.Renderers
             base.OnElementChanged(e);
 
             if (e.OldElement != null)
-            {
                 e.OldElement.FocusChangeRequested -= Element_FocusChangeRequested;
-            }
 
             if (e.NewElement == null)
                 return;
@@ -144,9 +139,7 @@ namespace Maoui.Forms.Renderers
         {
             // Typing aid changes don't always raise EditingChanged event
             if (Control.Value != Element.Text)
-            {
                 ElementController.SetValueFromRenderer(Entry.TextProperty, Control.Value);
-            }
 
             ElementController.SetValueFromRenderer(VisualElement.IsFocusedPropertyKey, false);
         }

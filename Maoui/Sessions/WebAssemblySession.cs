@@ -29,7 +29,7 @@ namespace Maoui
                     TransmitQueuedMessagesLocked(queuedMessages, i, max);
                     i += max;
                 }
-                //WebAssembly.Runtime.InvokeJS("console.log('TRANSMITTED'," + queuedMessages.Count + ")");
+                Trace.Log("console.log('TRANSMITTED'," + queuedMessages.Count + ")");
                 queuedMessages.Clear();
             }
         }
@@ -39,7 +39,6 @@ namespace Maoui
             if (messagesToSend.Count == 0)
                 return;
 
-            // Now actually send the messages
             var sb = new System.IO.StringWriter();
             sb.Write("__maouiReceiveMessages(\"");
             sb.Write(id);
@@ -55,7 +54,7 @@ namespace Maoui
             }
             sb.Write("])");
             var jsonp = sb.ToString();
-            // WebAssembly.Runtime.InvokeJS("console.log('TRANSMIT',"+n+")");
+            Trace.Log($"transmit {jsonp}");
             WebAssembly.Runtime.InvokeJS(jsonp);
         }
 

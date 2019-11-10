@@ -122,9 +122,7 @@ namespace Maoui
                 if (document == null)
                 {
                     if (Interlocked.CompareExchange(ref document, new Document(), null) == null)
-                    {
                         document.MessageSent += Document_MessageSent;
-                    }
                 }
                 return document;
             }

@@ -57,8 +57,7 @@ namespace Maoui.Forms.Cells
         {
             cell.ForceUpdateSizeRequested -= _onForceUpdateSizeRequested;
 
-            _onForceUpdateSizeRequested = (sender, e) =>
-            {
+            _onForceUpdateSizeRequested = (sender, e) => {
                 OnForceUpdateSizeRequest(cell, cellElement);
             };
 

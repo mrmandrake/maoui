@@ -83,9 +83,7 @@ namespace Maoui.Forms.Renderers
             else if (e.PropertyName == VisualElement.WidthProperty.PropertyName)
             {
                 if (_timer != null)
-                {
                     _timer.Stop();
-                }
                 else
                 {
                     _timer = new Timer();
@@ -148,11 +146,10 @@ namespace Maoui.Forms.Renderers
         {
             if (Control == null)
                 return;
+
             foreach (var c in Control.Children)
-            {
                 if (c is Element e)
                     e.Click -= ListItem_Click;
-            }
         }
 
         private void UpdateItems()
@@ -211,10 +208,10 @@ namespace Maoui.Forms.Renderers
                         Layout.LayoutChildIntoBoundingRegion(viewCell.View, rect);
                     }
                     offset += height;
+
                     if (rv == null)
-                    {
                         li.AppendChild(cell);
-                    }
+                    
                     i++;
                 }
             }
@@ -235,9 +232,7 @@ namespace Maoui.Forms.Renderers
                     li.Style["border-bottom"] = string.Format("{0}px {1} {2}", 1, "solid", color.ToString());
                 }
                 else
-                {
                     li.Style["border-bottom"] = null;
-                }
             }
         }
 
@@ -281,9 +276,7 @@ namespace Maoui.Forms.Renderers
         internal double CalculateHeightForCell(Cell cell)
         {
             if (!Element.HasUnevenRows)
-            {
                 return RowHeight;
-            }
             else
             {
                 var viewCell = cell as ViewCell;

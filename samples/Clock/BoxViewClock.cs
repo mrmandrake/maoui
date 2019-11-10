@@ -37,7 +37,7 @@ namespace Clock
             {
                 tickMarks[i] = new BoxView
                 {
-                    Color = Color.Accent
+                    Color = Xamarin.Forms.Color.Accent
                 };
                 absoluteLayout.Children.Add(tickMarks[i]);
             }
@@ -46,17 +46,17 @@ namespace Clock
             absoluteLayout.Children.Add(hourHand =
                 new BoxView
                 {
-                    Color = Color.Accent
+                    Color = Xamarin.Forms.Color.Accent
                 });
             absoluteLayout.Children.Add(minuteHand =
                 new BoxView
                 {
-                    Color = Color.Accent
+                    Color = Xamarin.Forms.Color.Accent
                 });
             absoluteLayout.Children.Add(secondHand =
                 new BoxView
                 {
-                    Color = Color.Accent
+                    Color = Xamarin.Forms.Color.Accent
                 });
 
             Content = absoluteLayout;

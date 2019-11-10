@@ -27,6 +27,7 @@ namespace Maoui.Forms.Renderers
 
             if (e.PropertyName == Maoui.Forms.LinkView.HRefProperty.PropertyName)
                 UpdateHRef();
+
             if (e.PropertyName == Maoui.Forms.LinkView.TargetProperty.PropertyName)
                 UpdateTarget();
         }

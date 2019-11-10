@@ -26,16 +26,13 @@ namespace Maoui.Forms.Renderers
             if (e.NewElement == null)
                 return;
 
-            if (Control == null)
-            {
-                var entry = new Input
-                {
+            if (Control == null) {
+                var entry = new Input {
                     ClassName = "form-control",
                     Type = InputType.Time
                 };
 
                 entry.Change += OnEnded;
-
                 SetNativeControl(entry);
             }
 
@@ -79,13 +76,8 @@ namespace Maoui.Forms.Renderers
 
             _disposed = true;
 
-            if (disposing)
-            {
-                if (Control != null)
-                {
-                    Control.Change -= OnEnded;
-                }
-            }
+            if ((disposing) && (Control != null))
+                Control.Change -= OnEnded;
 
             base.Dispose(disposing);
         }

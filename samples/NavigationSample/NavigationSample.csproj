@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Maoui\Maoui.csproj" />
+    <ProjectReference Include="..\..\Maoui.Forms\Maoui.Forms.csproj" />
+  </ItemGroup>
+    
+  <ItemGroup>
+    <EmbeddedResource Include="NavigationFirstPage.xaml" />
+    <EmbeddedResource Include="NavigationSecondPage.xaml" />
+    <EmbeddedResource Include="NavigationThirdPage.xaml" />
+  </ItemGroup>    
+</Project>

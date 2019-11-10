@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -7,5 +7,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Maoui.Forms\Maoui.Forms.csproj" />
     <ProjectReference Include="..\..\Maoui\Maoui.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="BugsPage.xaml" />
   </ItemGroup>
 </Project>

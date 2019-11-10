@@ -430,7 +430,7 @@ namespace Maoui
             }
 
             Element element = null;
-            bool disposeElementWhenDone = true;
+            var disposeElementWhenDone = true;
             try
             {
                 element = elementHandler.GetElement();
@@ -492,6 +492,7 @@ namespace Maoui
             catch (System.Net.WebSockets.WebSocketException ex) when (ex.WebSocketErrorCode == System.Net.WebSockets.WebSocketError.ConnectionClosedPrematurely)
             {
                 // The remote party closed the WebSocket connection without completing the close handshake.
+                Trace.Error(ex);
             }
             catch (Exception ex)
             {

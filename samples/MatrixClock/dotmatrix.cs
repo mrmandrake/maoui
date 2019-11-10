@@ -1,15 +1,14 @@
 ﻿using System;
 using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
-namespace DotMatrixClock
+namespace MatrixClock
 {
     public class DotMatrixClockPage : ContentPage
     {
         // Total dots horizontally and vertically.
         const int horzDots = 41;
-        const int vertDots = 7;
-
-        AbsoluteLayout absoluteLayout;
+        const int vertDots = 7;        
 
         // 5 x 7 dot matrix patterns for 0 through 9.
         static readonly int[,,] numberPatterns = {
@@ -67,15 +66,24 @@ namespace DotMatrixClock
         // Box views for 6 digits, 7 rows, 5 columns.
         BoxView[,,] digitBoxViews = new BoxView[6, 7, 5];
 
+        string xaml = @"<?xml version=""1.0"" encoding=""utf-8"" ?>
+                        <ContentPage xmlns=""http://xamarin.com/schemas/2014/forms"" 
+                            xmlns:x=""http://schemas.microsoft.com/winfx/2009/xaml"" 
+                            xmlns:local=""clr-namespace:MatrixClock"" 
+                            x:Class=""MatrixClock.DotMatrixClockPage"" 
+                            Padding=""10"" SizeChanged=""OnPageSizeChanged"">
+                        <AbsoluteLayout x:Name=""absoluteLayout"" VerticalOptions=""Center"" />
+                        </ContentPage>";
+
         void InitializeComponent()
         {
-            absoluteLayout = new AbsoluteLayout();
-            Content = absoluteLayout;
+            this.LoadFromXaml<DotMatrixClockPage>(xaml);
         }
 
         public DotMatrixClockPage()
         {
             InitializeComponent();
+            var absoluteLayout = this.FindByName<AbsoluteLayout>("absoluteLayout");
 
             // BoxView dot dimensions.
             double height = 0.85 / vertDots;
@@ -118,14 +126,10 @@ namespace DotMatrixClock
                         for (int row = 0; row < 7; row++)
                         {
                             // Create the BoxView and set the color.
-                            BoxView boxView = new BoxView
-                            {
-                                Color = colonPattern[row, col] == 1 ?
-                                                colorOn : colorOff
+                            BoxView boxView = new BoxView {
+                                Color = colonPattern[row, col] == 1 ? colorOn : colorOff
                             };
-                            absoluteLayout.Children.Add(boxView,
-                                                        new Rectangle(x, y, width, height),
-                                                        AbsoluteLayoutFlags.All);
+                            absoluteLayout.Children.Add(boxView, new Rectangle(x, y, width, height), AbsoluteLayoutFlags.All);
                             y += yIncrement;
                         }
                         x += xIncrement;
@@ -142,7 +146,7 @@ namespace DotMatrixClock
         void OnPageSizeChanged(object sender, EventArgs args)
         {
             // No chance a display will have an aspect ratio > 41:7
-            absoluteLayout.HeightRequest = vertDots * Width / horzDots;
+            this.FindByName<AbsoluteLayout>("absoluteLayout").HeightRequest = vertDots * Width / horzDots;
         }
 
         bool OnTimer()

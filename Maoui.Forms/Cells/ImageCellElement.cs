@@ -82,9 +82,7 @@ namespace Maoui.Forms.Cells
                 ImageView.Source = image;
             }
             else
-            {
                 ImageView.Source = null;
-            }
         }
     }
 }

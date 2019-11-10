@@ -28,7 +28,6 @@ namespace Maoui.Forms.Renderers
                 if (Control != null)
                 {
                     Control.Input -= HandleChanged;
-                    //Control.Started -= OnStarted;
                     Control.Change -= OnEnded;
                 }
             }
@@ -45,15 +44,13 @@ namespace Maoui.Forms.Renderers
 
             if (Control == null)
             {
-                var textArea = new TextArea
-                {
+                var textArea = new TextArea {
                     ClassName = "form-control"
                 };
                 textArea.Style["resize"] = "none";
                 SetNativeControl(textArea);
 
                 Control.Input += HandleChanged;
-                //Control.Started += OnStarted;
                 Control.Change += OnEnded;
             }
 

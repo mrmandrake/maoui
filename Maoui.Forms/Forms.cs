@@ -18,6 +18,7 @@ namespace Xamarin.Forms
         {
             if (IsInitialized)
                 return;
+
             IsInitialized = true;
 
             Log.Listeners.Add(new DelegateLogListener((c, m) => System.Diagnostics.Debug.WriteLine(m, c)));
@@ -189,9 +190,7 @@ namespace Xamarin.Forms
             Application.Current = application;
             var mainPage = application.MainPage;
             if (mainPage != null)
-            {
                 UI.Publish("/", application.MainPage.GetMaouiElement());
-            }
         }
     }
 }

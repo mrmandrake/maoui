@@ -1,6 +1,7 @@
+using WebAssembly;
 using WebAssembly.Core;
 
-namespace WebGLDotNET
+namespace WebGl
 {
 #pragma warning disable MEN002
     public partial class WebGLContextAttributes

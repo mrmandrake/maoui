@@ -3,7 +3,7 @@ using Maoui;
 using System.Threading;
 using Xamarin.Forms;
 
-namespace LocalStorage
+namespace WebView
 {
     public class HelloWorld
     {

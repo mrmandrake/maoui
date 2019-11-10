@@ -22,9 +22,7 @@ namespace Maoui.Forms.Renderers
         protected override void Dispose(bool disposing)
         {
             if (Control != null)
-            {
                 Control.Click -= OnButtonTouchUpInside;
-            }
 
             base.Dispose(disposing);
         }
@@ -93,23 +91,15 @@ namespace Maoui.Forms.Renderers
 
             float bw = Math.Max(0f, (float)button.BorderWidth);
             if (bw > 0)
-            {
                 uiButton.Style.BorderWidth = bw + "px";
-            }
             else
-            {
                 uiButton.Style.BorderWidth = null;
-            }
 
             var br = button.CornerRadius;
             if (br > 0 && (bw > 0 || br != 5))
-            { // 5 is the default
                 uiButton.Style.BorderRadius = br + "px";
-            }
             else
-            {
                 uiButton.Style.BorderRadius = null;
-            }
         }
 
         void UpdateFont()
@@ -155,9 +145,7 @@ namespace Maoui.Forms.Renderers
             var newText = Element.Text;
 
             if (Control.Text != newText)
-            {
                 Control.Text = Element.Text;
-            }
         }
 
         void UpdateTextColor()

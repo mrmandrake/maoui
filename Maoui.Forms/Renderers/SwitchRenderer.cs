@@ -95,13 +95,9 @@ namespace Maoui.Forms.Renderers
                 Style.BorderColor = Style.BackgroundColor;
                 knob.Style.BackgroundColor = isChecked ? "#FFF" : "#EEE";
                 if (isChecked)
-                {
                     knob.Style.Left = "32px";
-                }
                 else
-                {
                     knob.Style.Left = "0px";
-                }
             }
         }
     }

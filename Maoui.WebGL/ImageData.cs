@@ -2,7 +2,7 @@
 using WebAssembly.Core;
 using WebAssembly.Host;
 
-namespace WebGLDotNET
+namespace WebGl
 {
     public class ImageData : JSHandler
     {

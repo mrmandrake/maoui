@@ -17,15 +17,11 @@ namespace Maoui.Forms.Renderers
                 if (string.IsNullOrEmpty(html))
                 {
                     if (Element.Source is HtmlWebViewSource urlWebViewSource)
-                    {
                         html = urlWebViewSource.Html;
-                    }
                 }
 
                 if (_iframe != null)
-                {
                     _iframe.Source = html;
-                }
             }
             catch (Exception ex)
             {
@@ -40,15 +36,11 @@ namespace Maoui.Forms.Renderers
                 if (string.IsNullOrEmpty(url))
                 {
                     if (Element.Source is UrlWebViewSource urlWebViewSource)
-                    {
                         url = urlWebViewSource.Url;
-                    }
                 }
 
                 if (_iframe != null)
-                {
                     _iframe.Source = url;
-                }
             }
             catch (Exception ex)
             {
@@ -96,9 +88,7 @@ namespace Maoui.Forms.Renderers
             if (disposing && !_disposed)
             {
                 if (_iframe != null)
-                {
                     _iframe = null;
-                }
 
                 _disposed = true;
             }

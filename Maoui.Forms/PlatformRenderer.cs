@@ -29,9 +29,7 @@ namespace Maoui.Forms
                 return true;
             }
             else
-            {
                 return base.TriggerEventFromMessage(message);
-            }
         }
 
         #region IDisposable Support

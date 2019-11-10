@@ -31,9 +31,7 @@ namespace Maoui.Forms.Renderers
             base.Dispose(disposing);
 
             if (disposing && Control != null && ManageNativeControlLifetime)
-            {
                 Control = null;
-            }
         }
 
         protected override void OnElementChanged(ElementChangedEventArgs<TElement> e)
@@ -70,16 +68,12 @@ namespace Maoui.Forms.Renderers
         protected override void OnRegisterEffect(PlatformEffect effect)
         {
             base.OnRegisterEffect(effect);
-            //effect.Control = Control;
         }
 
         protected override void SetAutomationId(string id)
         {
             if (Control == null)
                 base.SetAutomationId(id);
-            else
-            {
-            }
         }
 
         protected override void SetBackgroundColor(Xamarin.Forms.Color color)

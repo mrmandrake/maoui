@@ -187,17 +187,18 @@ namespace Maoui
                                     i++;
                                 }
                                 else
-                                {
                                     i++;
-                                }
                             }
                         });
                         break;
+
+                    default:
+                        break;
                 }
+
                 if (!handled)
-                {
                     base.SaveStateMessageIfNeeded(message);
-                }
+
                 return true;
             }
             else
@@ -223,10 +224,9 @@ namespace Maoui
             {
                 var ch = Children;
                 for (var i = 0; i < ch.Count; i++)
-                {
                     if (ch[i].TriggerEventFromMessage(message))
                         return true;
-                }
+
             }
             return false;
         }
@@ -258,29 +258,5 @@ namespace Maoui
         public abstract void WriteOuterHtml(System.Xml.XmlWriter w);
 
 #endif
-    }
-
-    class ReadOnlyList<T> : IReadOnlyList<T>
-    {
-        readonly List<T> list;
-
-        public ReadOnlyList(List<T> items)
-        {
-            list = new List<T>(items);
-        }
-
-        T IReadOnlyList<T>.this[int index] => list[index];
-
-        int IReadOnlyCollection<T>.Count => list.Count;
-
-        IEnumerator<T> IEnumerable<T>.GetEnumerator()
-        {
-            return ((IEnumerable<T>)list).GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return ((IEnumerable)list).GetEnumerator();
-        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using Xamarin.Forms;
 
-namespace LocalStorage
+namespace WebView
 {
     class Program
     {
@@ -31,7 +31,7 @@ namespace LocalStorage
             return page.GetMaouiElement();
         }
 
-        public static void Main(string[] args)
+        public static void Main()
         {
             Forms.Init();
             Maoui.UI.Publish("/", CreateElement());

@@ -76,8 +76,6 @@ namespace Maoui.Forms
             MessagingCenter.Unsubscribe<Page, bool>(this, Page.BusySetSignalName);
 
             DisposeModelAndChildrenRenderers(Page);
-            //foreach (var modal in _modals)
-            //DisposeModelAndChildrenRenderers (modal);
         }
 
         public static IVisualElementRenderer CreateRenderer(VisualElement element)
@@ -148,18 +146,13 @@ namespace Maoui.Forms
                 child.ClearValue(RendererProperty);
 
                 if (renderer != null)
-                {
-                    //renderer.NativeView.RemoveFromSuperview ();
                     renderer.Dispose();
-                }
             }
 
             renderer = GetRenderer((VisualElement)view);
             if (renderer != null)
-            {
-                //renderer.NativeView.RemoveFromSuperview ();
                 renderer.Dispose();
-            }
+
             view.ClearValue(RendererProperty);
         }
 

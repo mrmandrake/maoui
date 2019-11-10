@@ -83,18 +83,14 @@ namespace Maoui.Forms
             {
                 _cancelButton.Click += value;
                 foreach (var btn in _buttons)
-                {
                     btn.Click += value;
-                }
 
             }
             remove
             {
                 _cancelButton.Click -= value;
                 foreach (var btn in _buttons)
-                {
                     btn.Click -= value;
-                }
             }
         }
     }

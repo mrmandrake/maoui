@@ -12,14 +12,11 @@ namespace Maoui.Forms.Renderers
         protected override void OnElementChanged(ElementChangedEventArgs<ScrollView> e)
         {
             if (e.OldElement != null)
-            {
                 e.OldElement.ScrollToRequested -= Element_ScrollToRequested;
-            }
 
             if (e.NewElement != null)
             {
                 Style.Overflow = "scroll";
-
                 e.NewElement.ScrollToRequested += Element_ScrollToRequested;
             }
 
@@ -33,9 +30,8 @@ namespace Maoui.Forms.Renderers
             if (disposing && !disposed)
             {
                 if (Element != null)
-                {
                     Element.ScrollToRequested -= Element_ScrollToRequested;
-                }
+
                 disposed = true;
             }
         }

@@ -17,10 +17,6 @@ namespace Maoui.Forms.Renderers
             if (_isDisposed)
                 return;
 
-            if (disposing)
-            {
-            }
-
             _isDisposed = true;
 
             base.Dispose(disposing);
@@ -89,18 +85,12 @@ namespace Maoui.Forms.Renderers
                 Element.WidthRequest = scale * ClientWidth;
                 Element.HeightRequest = b.Height;
             }
-            else
-            {
-                // We can't really know what to do in this case
-            }
         }
 
         void SetAspect()
         {
             if (_isDisposed || Element == null || Control == null)
-            {
                 return;
-            }
         }
 
         protected virtual async Task TrySetImage(Xamarin.Forms.Image previous = null)
@@ -126,9 +116,7 @@ namespace Maoui.Forms.Renderers
         protected async Task SetImage(Xamarin.Forms.Image oldElement = null)
         {
             if (_isDisposed || Element == null || Control == null)
-            {
                 return;
-            }
 
             var source = Element.Source;
 
@@ -171,9 +159,7 @@ namespace Maoui.Forms.Renderers
                 ((IVisualElementController)Element).NativeSizeChanged();
             }
             else
-            {
                 Control.Source = "";
-            }
 
             Element.SetIsLoading(false);
         }
@@ -181,9 +167,7 @@ namespace Maoui.Forms.Renderers
         void SetOpacity()
         {
             if (_isDisposed || Element == null || Control == null)
-            {
                 return;
-            }
         }
     }
 
@@ -204,14 +188,8 @@ namespace Maoui.Forms.Renderers
             {
                 var name = System.IO.Path.GetFileName(file);
                 image = "/images/" + name;
-                if (Maoui.UI.TryGetFileContentAtPath(image, out var f))
-                {
-                    // Already published
-                }
-                else
-                {
+                if (!Maoui.UI.TryGetFileContentAtPath(image, out var f))
                     await Task.Run(() => Maoui.UI.PublishFile(image, file), cancelationToken);
-                }
             }
             return image;
         }
@@ -237,22 +215,15 @@ namespace Maoui.Forms.Renderers
                         var hash = Maoui.Utilities.GetShaHash(data);
                         var etag = "\"" + hash + "\"";
                         image = "/images/" + hash;
-                        if (Maoui.UI.TryGetFileContentAtPath(image, out var file) && file.Etag == etag)
-                        {
-                            // Already published
-                        }
-                        else
-                        {
+                        if (!(Maoui.UI.TryGetFileContentAtPath(image, out var file) && file.Etag == etag))
                             Maoui.UI.PublishFile(image, data, etag, "image");
-                        }
                     }
                 }
             }
 
             if (image == null)
-            {
                 System.Diagnostics.Debug.WriteLine("Could not load image: {0}", streamsource);
-            }
+
             return image;
         }
     }

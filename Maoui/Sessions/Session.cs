@@ -63,14 +63,14 @@ namespace Maoui
             {
                 for (var i = 0; i < a.Length; i++)
                 {
-                    // Console.WriteLine ($"A{i} = {a.GetValue(i)}");
+                    Trace.Log($"A{i} = {a.GetValue(i)}");
                     if (a.GetValue(i) is EventTarget e && !createdIds.Contains(e.Id))
                         QueueStateMessagesLocked(e);
                 }
             }
 
             // Add it to the queue
-            //Console.WriteLine ($"QM {message.MessageType} {message.TargetId} {message.Key} {message.Value}");
+            Trace.Log($"QM {message.MessageType} {message.TargetId} {message.Key} {message.Value}");
             queuedMessages.Add(message);
         }
 

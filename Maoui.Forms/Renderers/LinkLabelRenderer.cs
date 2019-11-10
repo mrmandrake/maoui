@@ -166,13 +166,9 @@ namespace Maoui.Forms.Renderers
 
             var textColor = Element.TextColor;
             if (textColor.IsDefault)
-            {
                 Control.Style.Color = null;
-            }
             else
-            {
                 Control.Style.Color = textColor.ToMaouiColor(Xamarin.Forms.Color.Black);
-            }
         }
     }
 }

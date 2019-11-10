@@ -39,18 +39,6 @@ namespace Maoui.Forms.Renderers
 
             Layer.BackgroundColor = Element.BackgroundColor.ToMaouiColor(MaouiTheme.BackgroundColor);
 
-            if (Element.HasShadow)
-            {
-                //Layer.ShadowRadius = 5;
-                //Layer.ShadowColor = "black";
-                //Layer.ShadowOpacity = 0.8f;
-                //Layer.ShadowOffset = new SizeF ();
-            }
-            else
-            {
-                //Layer.ShadowOpacity = 0;
-            }
-
             if (Element.BorderColor == Xamarin.Forms.Color.Default)
             {
                 Layer.BorderColor = Colors.Clear;
