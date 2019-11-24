@@ -24,7 +24,7 @@ namespace Xamarin.Forms
             Log.Listeners.Add(new DelegateLogListener((c, m) => System.Diagnostics.Debug.WriteLine(m, c)));
 
             Device.SetIdiom(TargetIdiom.Desktop);
-            Device.PlatformServices = new OouiPlatformServices();
+            Device.PlatformServices = new MaouiPlatformServices();
             Device.Info = new MaouiDeviceInfo();
             Color.SetAccent(Color.FromHex("#337ab7")); // Bootstrap Blue
 
@@ -54,7 +54,7 @@ namespace Xamarin.Forms
             public override double ScalingFactor => 1;
         }
 
-        class OouiPlatformServices : IPlatformServices
+        class MaouiPlatformServices : IPlatformServices
         {
             public bool IsInvokeRequired => false;
 

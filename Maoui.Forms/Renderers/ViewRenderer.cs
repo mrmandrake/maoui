@@ -92,7 +92,6 @@ namespace Maoui.Forms.Renderers
                 SetBackgroundColor(Element.BackgroundColor);
 
             UpdateIsEnabled();
-
             this.AppendChild(element);
         }
 

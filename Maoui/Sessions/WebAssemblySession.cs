@@ -29,7 +29,7 @@ namespace Maoui
                     TransmitQueuedMessagesLocked(queuedMessages, i, max);
                     i += max;
                 }
-                Trace.Log("console.log('TRANSMITTED'," + queuedMessages.Count + ")");
+                Trace.Log(">>>>TRANSMITTED " + queuedMessages.Count);
                 queuedMessages.Clear();
             }
         }
@@ -54,8 +54,15 @@ namespace Maoui
             }
             sb.Write("])");
             var jsonp = sb.ToString();
-            Trace.Log($"transmit {jsonp}");
-            WebAssembly.Runtime.InvokeJS(jsonp);
+
+            try {
+                Trace.Log($"transmit {jsonp}");
+                WebAssembly.Runtime.InvokeJS(jsonp);
+            }
+            catch (Exception)
+            {
+                // Trace.Error(e.Message);
+            }            
         }
 
         public void ReceiveMessageJson(string json)

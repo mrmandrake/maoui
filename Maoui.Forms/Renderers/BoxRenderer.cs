@@ -30,7 +30,6 @@ namespace Maoui.Forms.Renderers
                 return;
 
             _colorToRenderer = Element.Color.ToMaouiColor(Colors.Clear);
-
             Style.BackgroundColor = _colorToRenderer;
         }
     }

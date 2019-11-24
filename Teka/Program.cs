@@ -21,17 +21,19 @@ namespace Teka
 
         public static void Main(string[] args)
 		{
-            //if (args.Length < 2)
-            //    return;
+            if (args.Length < 1)
+            {
+                Console.WriteLine("Entry Assembly name missing!!");
+                return;
+            }                
 
-            //wwwroot = args[0];
             Task.Factory.StartNew(() => { RunStaticServe(args); });
             Task.Factory.StartNew(() => { RunMonoDebuggerHost(args); });
-			Thread.Sleep(1000);
+            Thread.Sleep(1000);
             RunChrome(args[0]);
             Thread.Sleep(1000);
             RunCanary();
-			Console.ReadLine();
+            Console.ReadLine();
             chrome.Kill();
             canary.Kill();
 		}

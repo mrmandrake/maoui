@@ -495,9 +495,10 @@ namespace Teka {
 
 		public DebugStore (string [] loaded_files)
 		{
+			Console.WriteLine("DebugStore:");
 			bool MatchPdb (string asm, string pdb)
 			{
-				return Path.ChangeExtension (asm, "pdb") == pdb;
+				return Path.ChangeExtension (asm, "pdb").ToLower() == pdb.ToLower();
 			}
 
 			var asm_files = new List<string> ();
@@ -505,13 +506,20 @@ namespace Teka {
 			foreach (var f in loaded_files) {
 				var file_name = f;
 				if (file_name.EndsWith (".pdb", StringComparison.OrdinalIgnoreCase))
-					pdb_files.Add (file_name);
+                    pdb_files.Add(file_name);
 				else
-					asm_files.Add (file_name);
+                    asm_files.Add(file_name);
 			}
 
-			//FIXME make this parallel
-			foreach (var p in asm_files) {
+            foreach (var p in pdb_files)
+                Console.WriteLine($"pdb added: {p}");
+
+            foreach (var a in asm_files)
+                Console.WriteLine($"asm added: {a}");
+
+            //FIXME make this parallel
+            foreach (var p in asm_files) {
+				Console.WriteLine($"reading {p}");
 				try {
 					var pdb = pdb_files.FirstOrDefault (n => MatchPdb (p, n));
 					HttpClient h = new HttpClient ();

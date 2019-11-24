@@ -5,7 +5,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
+using System;
 using System.IO;
+using System.Net.WebSockets;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Teka
 {
@@ -31,6 +35,7 @@ namespace Teka
             app.UseDeveloperExceptionPage();
             app.UseDefaultFiles();
             app.UseStaticFiles();
+            app.UseWebSockets();
 
             var provider = new FileExtensionContentTypeProvider();
             provider.Mappings[".wasm"] = "application/wasm";
@@ -42,6 +47,34 @@ namespace Teka
                 RequestPath = "",
                 ContentTypeProvider = provider
             });
+
+            app.Map("/ws", builder =>
+            {
+                builder.Use(async (context, next) => {
+                    if (context.WebSockets.IsWebSocketRequest) {
+                        var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+                        await Echo(webSocket);
+                        return;
+                    }
+                    await next();
+                });
+            });
+        }
+
+        private async Task Echo(WebSocket webSocket)
+        {
+            Console.WriteLine("echo websocket request...");
+            byte[] buffer = new byte[1024 * 4];
+            Console.WriteLine("receive async");
+            var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+            while (!result.CloseStatus.HasValue)
+            {
+                Console.WriteLine($"echo {result.Count} bytes: " + System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length));
+                Console.WriteLine("send async");
+                await webSocket.SendAsync(new ArraySegment<byte>(buffer, 0, result.Count), result.MessageType, result.EndOfMessage, CancellationToken.None);
+                result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+            }
+            await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
         }
     }
 }

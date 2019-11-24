@@ -1,6 +1,0 @@
-config = {
- 	vfs_prefix: "managed",
- 	deploy_prefix: "managed",
- 	enable_debugging: 1,
- 	file_list: [ "CanvasClock.dll","CanvasClock.pdb","netstandard.dll","mscorlib.dll","mscorlib.pdb","System.dll","System.pdb","Mono.Security.dll","Mono.Security.pdb","System.Xml.dll","System.Xml.pdb","System.Numerics.dll","System.Numerics.pdb","System.Core.dll","System.Core.pdb","System.Data.dll","System.Data.pdb","System.Transactions.dll","System.Transactions.pdb","System.Data.DataSetExtensions.dll","System.Data.DataSetExtensions.pdb","System.Drawing.Common.dll","System.Drawing.Common.pdb","System.IO.Compression.dll","System.IO.Compression.pdb","System.IO.Compression.FileSystem.dll","System.IO.Compression.FileSystem.pdb","System.ComponentModel.Composition.dll","System.ComponentModel.Composition.pdb","System.Net.Http.dll","System.Net.Http.pdb","WebAssembly.Net.Http.dll","WebAssembly.Net.Http.pdb","WebAssembly.Bindings.dll","WebAssembly.Bindings.pdb","System.Memory.dll","System.Runtime.Serialization.dll","System.Runtime.Serialization.pdb","System.ServiceModel.Internals.dll","System.ServiceModel.Internals.pdb","System.Xml.Linq.dll","System.Xml.Linq.pdb","WebAssembly.Browser.dll","WebAssembly.Browser.pdb","WebAssembly.Net.WebSockets.dll","WebAssembly.Net.WebSockets.pdb" ],
-}
