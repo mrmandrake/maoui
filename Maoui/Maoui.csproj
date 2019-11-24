@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <Reference Include="WebAssembly.Bindings">
-      <HintPath>..\..\..\mono-wasm\framework\WebAssembly.Bindings.dll</HintPath>
+      <HintPath>..\..\mono-wasm\framework\WebAssembly.Bindings.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>
