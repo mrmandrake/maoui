@@ -1,16 +1,21 @@
-function get_url_parameter(name) {
-    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-    var results = regex.exec(location.search);
-    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+function goWasm(mainAsmName, mainNamespace, mainClassName, mainMethodName, assemblies) {
+    if (debug)
+        console.log("goWasm:" + mainAsmName + "," + mainNamespace + "," + mainClassName + "," + mainMethodName + "," + assemblies);
+
+    Module.entryPoint = { "a": mainAsmName, "n": mainNamespace, "t": mainClassName, "m": mainMethodName };
+    Module.assemblies = assemblies;
+    initializeNavigation();
+    monitorSizeChanges(1000 / 30);
 }
 
 document.addEventListener("DOMContentLoaded", function (event) {
     let asm = get_url_parameter("assembly");
-    oouiWasm(asm, asm, "Program", "Main");
+    goWasm(asm, asm, "Program", "Main");
 });
 var App = {
     init: function () {
-    MonoRuntime.init();
-}
+        if (debug)
+            console.log("App.init");
+        MonoRuntime.init();
+    }
 };
